@@ -31,6 +31,7 @@ public class CartInput : MonoBehaviour
             rightButton.gameObject.SetActive(true);
             shootButton.gameObject.SetActive(true);
             input.SwitchCurrentControlScheme();
+            ControlKeyboard();
         }
         else
         {
@@ -38,9 +39,15 @@ public class CartInput : MonoBehaviour
             leftButton.gameObject.SetActive(false);
             rightButton.gameObject.SetActive(false);
             shootButton.gameObject.SetActive(false);
+            ControlMobile();
         }
     }
     private void Update()
+    {
+        if (controlMode == ControlMode.Keyboard) ControlKeyboard();
+        if (controlMode == ControlMode.Mobile) ControlMobile();
+    }
+    private void ControlMobile()
     {
         if (leftIsPressed) movement = Vector2.left;
         if (rightIsPressed) movement = Vector2.right;
@@ -48,18 +55,19 @@ public class CartInput : MonoBehaviour
 
         if (shootIsPressed) turret.Shoot();
     }
-    private void controlMobile()
-    {
-        
-    }
-    //Shoot = Keyboard.current[Key.K];
-    private void controlKeyboard()
+    private void ControlKeyboard()
     {
         movement = Vector2.zero;
 
-        if (Keyboard.current[  ]) leftIsPressed = true;
-        if (Keyboard.current[Key.K ]) rightIsPressed = true;
-        if (Keyboard.current[  ]) shootIsPressed = true;
+        leftIsPressed = Keyboard.current[Key.A].isPressed;
+        rightIsPressed = Keyboard.current[Key.D].isPressed;
+        shootIsPressed = Keyboard.current[Key.Space].isPressed;
+
+        if (leftIsPressed) movement = Vector2.left;
+        if (rightIsPressed) movement = Vector2.right;
+        if (!leftIsPressed & !rightIsPressed) movement = Vector2.zero;
+
+        if (shootIsPressed) turret.Shoot();
     }
     private void Awake()
     {
